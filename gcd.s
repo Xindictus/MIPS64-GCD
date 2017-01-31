@@ -26,36 +26,36 @@ main:
 	 nop
 	 dadd r25, r2, r0	
 	 daddi r8, r0, 3
-	 ddiv r24, r25, r8		#o r24 tha exei pleon twn arithmo twn epanalipsewn
+	 ddiv r24, r25, r8		# r24 will have the # of loops
 	 #daddi r24, r0, 33
-	 ld r16,A(r0)			#$r16 = prwto stoixeio triadas
-	 dadd r22, r16, r0		#o r22 exei to prwto stoixeio tou pinaka
-	 jal check_bound		#elegxoume an einai ektos oriwn
+	 ld r16,A(r0)			# r16 first number
+	 dadd r22, r16, r0		# r22 will have the 1st number out of the 3
+	 jal check_bound		# checking if we are out of bounds
 	 nop
-	 daddi r11 , r0 , 8		#offset 8 bytes kathe fora gia na pernw ta stoixeia
-	 ld r17,A(r11)			#r17 = deutero stoixeio triadas
-	 dadd r22, r17, r0		#o r22 exei to deutero stoixeio tou pinaka
-	 jal check_bound		#elegxoume an einai ektos oriwn
+	 daddi r11 , r0 , 8		# offset 8 bytes every time in order to get all numbers
+	 ld r17,A(r11)			# r17 = 2nd number out of the 3
+	 dadd r22, r17, r0		# r22 now has the 2nd number of the table
+	 jal check_bound		# checking if we are out of bounds
 	 nop
-	 daddi r11 , r11 , 8	#offset 8 bytes kathe fora gia na pernw ta stoixeia
-	 ld r18,A(r11)			#r18 = trito stoixeio triadas
-	 dadd r22, r18, r0		#o r22 exei to deutero stoixeio tou pinaka
-	 jal check_bound		#elegxoume an einai ektos oriwn
+	 daddi r11 , r11 , 8	        # offset 8 bytes every time in order to get all numbers
+	 ld r18,A(r11)			# r18 = 3rd number out of the 3
+	 dadd r22, r18, r0		# r22 now has the 3rd number of the table
+	 jal check_bound		# checking if we are out of bounds
 	 nop
 	 j loop			
 loop:
-	 beq r24, r0, exit		#sinthiki gia tin epanalipsi
-	 daddi r24, r24, -1		#meiwnoume ton metriti kata ena
-	 daddi r29 , r29 , -16	#xwros gia dio metablites  stoiba
-	 jal gcd				#pame sti sinartisi pou briskei to megisto koino diaireti
+	 beq r24, r0, exit		
+	 daddi r24, r24, -1		
+	 daddi r29 , r29 , -16	        # space for 2 variable in heap
+	 jal gcd			# finding gcd
 	 
 	 
-	 dadd r25, r2, r0 		#apotelesma protis diadas
+	 dadd r25, r2, r0 		# result of the 1st group of 3
 	 dadd r16, r17, r0 
 	 dadd r17, r18, r0
 	
-	 jal gcd				#pame sti sinartisi pou briskei to megisto koino diaireti
-	 dadd r24, r2, r0 		#apotelesma deuteris diadas
+	 jal gcd			# finding gcd
+	 dadd r24, r2, r0 		# result of 2nd group of 3
 	 dadd r16, r25, r0 
 	 dadd r17, r24, r0
 	 jal gcd
@@ -77,47 +77,46 @@ NEXT3:
 	 daddi r11, r11, 8		
 	 ld r16, A(r11)
 	 dadd r22, r16, r0
-	 jal check_bound		#elegxoume an einai ektos oriwn
+	 jal check_bound		# checking if we are out of bounds
 	 nop
 	 daddi r11, r11, 8
 	 ld r17, A(r11)
 	 dadd r22, r17, r0
-	 jal check_bound		#elegxoume an einai ektos oriwn
+	 jal check_bound		# checking if we are out of bounds
 	 nop
 	 daddi r11, r11, 8
 	 ld r18, A(r11)
 	 dadd r22, r18, r0
-	 jal check_bound		#elegxoume an einai ektos oriwn
+	 jal check_bound		# checking if we are out of bounds
 	 nop
 	 
 	 j loop
 	 nop
 	 
-exit:						#kanoniki eksodos
+exit:					# exit without errors
 	 halt
 	 
 exit2:
-	 lwu r21,CONTROL(r0)	#eksodos an exoume out of bounds
-     lwu r22,DATA(r0)
-     daddi r24,r0,4 
-     daddi r1,r0,title   
-     sd r1,(r22)
-     sd r24,(r21)
-	 halt
-
+         lwu r21,CONTROL(r0)	       	# exit if we are out of bounds
+         lwu r22,DATA(r0)
+         daddi r24,r0,4 
+         daddi r1,r0,title   
+         sd r1,(r22)
+         sd r24,(r21)
+         halt
 	 
 check_bound:
-	daddi r20, r0, 1000		#bazoumne ston r20 gia elegxo me to 1000
+	daddi r20, r0, 1000		# checking bounds
 	slt r21, r22, r20
-	beq r21, r0, exit2		#an megalitero pigaine stin exit2
-	dadd r20, r0, r0		#bazoume ston r20 to 0
+	beq r21, r0, exit2		# if greater than go to exit2
+	dadd r20, r0, r0		# r20 = 0
 	slt r21, r20, r22 
-	beq r21, r0, exit2		#an mikrotero pigaine stin exit2
+	beq r21, r0, exit2		# if less than, go to exit2
 	nop
 	jr r31 
 	  
 array_length:
-	dadd r8, r0, r0 		#array length
+	dadd r8, r0, r0 		# array length
 	dadd r9, r0, r0
 	ld r11, A(r0)
 	ld r10, B(r0)
