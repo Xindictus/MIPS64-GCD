@@ -21,7 +21,7 @@ DATA:    .word32 0x10008
 	
 main:
 	 #daddi r29 , r29 , -16
-	 jal array_length		#euresi megethous pinaka mporei na paraleifthei an kseroume eksarxis to megethos
+	 jal array_length		# find the table size
 	 
 	 nop
 	 dadd r25, r2, r0	
@@ -29,16 +29,16 @@ main:
 	 ddiv r24, r25, r8		# r24 will have the # of loops
 	 #daddi r24, r0, 33
 	 ld r16,A(r0)			# r16 first number
-	 dadd r22, r16, r0		# r22 will have the 1st number out of the 3
+	 dadd r22, r16, r0		# r22 will have the 1st number of the 1st group of 3
 	 jal check_bound		# checking if we are out of bounds
 	 nop
-	 daddi r11 , r0 , 8		# offset 8 bytes every time in order to get all numbers
-	 ld r17,A(r11)			# r17 = 2nd number out of the 3
+	 daddi r11 , r0 , 8		# offset 8 bytes every time to get all numbers
+	 ld r17,A(r11)			# r17 = 2nd number of the 1st group of 3
 	 dadd r22, r17, r0		# r22 now has the 2nd number of the table
 	 jal check_bound		# checking if we are out of bounds
 	 nop
-	 daddi r11 , r11 , 8	        # offset 8 bytes every time in order to get all numbers
-	 ld r18,A(r11)			# r18 = 3rd number out of the 3
+	 daddi r11 , r11 , 8	        # offset 8 bytes every time get all numbers
+	 ld r18,A(r11)			# r18 = 3rd number of the 1st group of 3
 	 dadd r22, r18, r0		# r22 now has the 3rd number of the table
 	 jal check_bound		# checking if we are out of bounds
 	 nop
